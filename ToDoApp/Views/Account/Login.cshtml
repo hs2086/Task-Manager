@@ -1,0 +1,237 @@
+@using ToDoApp.ViewModel
+@model LoginVM
+
+<div class="split-container">
+    <div class="image-section">
+        <img src="~/Images/back.jpeg" alt="Background Image" class="main-image" />
+    </div>
+    <div class="form-section">
+        <div class="form-container">
+            <h1>Sign In</h1>
+            <form class="register-form" asp-action="Login" asp-controller="Account" method="post">
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                
+                <div class="form-content">
+                    <div class="form-group">
+                        <label asp-for="Email" class="form-label">Email Address</label>
+                        <input asp-for="Email" class="form-control" placeholder="email@example.com">
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="password-input-container">
+                            <input asp-for="Password" class="form-control" placeholder="Create password" 
+                                type="password" id="password"
+                                oncopy="return false" oncut="return false" onpaste="return false">
+                            <span class="toggle-password" onclick="togglePassword('password')">
+                                <i class="far fa-eye"></i>
+                            </span>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    <div class="form-group d-flex justify-content-between align-items-center">
+                        <div class="form-check">
+                            <input asp-for="RememberMe" class="form-check-input" />
+                            <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                        </div>
+                        <a href="/Account/Forgot" class="text-small">Forgot password?</a>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn btn-primary">Sign In</button>
+                    <a asp-action="Register" asp-controller="Account" class="btn btn-secondary">Create Account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Maintain all your original styles */
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .split-container {
+        display: flex;
+        height: 100vh;
+    }
+
+    .image-section {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .main-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .form-section {
+        flex: 1;
+        display: flex;
+        background-color: #fff;
+        padding: 2vh 0;
+        overflow-y: auto;
+    }
+
+    .form-container {
+        width: 90%;
+        max-width: 350px;
+        padding: 15px;
+        margin: auto;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 0 0 25px 0;
+        font-size: 1.75rem;
+        color: #333;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #555;
+        font-weight: 600;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px 0;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        font-size: 15px;
+        background-color: transparent;
+    }
+
+    .form-control:focus {
+        border-bottom: 2px solid #007bff;
+        outline: none;
+    }
+
+    .password-input-container {
+        position: relative;
+    }
+
+    .toggle-password {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #777;
+        padding: 0 5px;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .btn-primary {
+        flex: 1;
+        padding: 12px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .btn-secondary {
+        flex: 1;
+        padding: 12px;
+        background-color: transparent;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        color: #333;
+        font-size: 15px;
+        font-weight: 500;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .form-check {
+        display: flex;
+        align-items: center;
+        margin: 0;
+    }
+
+    .form-check-input {
+        margin-right: 8px;
+    }
+
+    .form-check-label {
+        font-size: 14px;
+        color: #555;
+    }
+
+    .text-small {
+        font-size: 13px;
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    @@media (max-width: 768px) {
+        .split-container {
+            flex-direction: column;
+        }
+        
+        .image-section {
+            height: 30vh;
+        }
+        
+        .form-section {
+            padding: 20px 0;
+        }
+        
+        .form-container {
+            width: 85%;
+        }
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = field.nextElementSibling.querySelector('i');
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordFields = document.querySelectorAll('input[type="password"]');
+            passwordFields.forEach(field => {
+                field.addEventListener('contextmenu', function(e) {
+                    e.preventDefault();
+                    return false;
+                });
+            });
+        });
+    </script>
+}

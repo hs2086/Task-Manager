@@ -1,0 +1,160 @@
+@model ToDoApp.ViewModel.BigUserVM
+@{
+    ViewData["Title"] = "Blocked Users";
+}
+
+<div class="container mt-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Blocked Users</h2>
+        <div>
+            <a asp-action="Users" asp-controller="Admin" class="btn btn-outline-primary">
+                <i class="bi bi-arrow-left"></i> Back to All Users
+            </a>
+            <a asp-action="CreateUser" asp-controller="Admin" class="btn btn-primary ms-2">
+                <i class="bi bi-plus-circle"></i> Add New User
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            @{
+                var hasBlockedUsers = Model?.Users?.Any(u => u.IsBlocked) ?? false;
+            }
+            
+            @if (!hasBlockedUsers)
+            {
+                <div class="alert alert-info">
+                    No currently blocked users found.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Blocked Until</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in Model.Users.Where(u => u.IsBlocked))
+                            {
+                                <tr>
+                                    <td>@user.Name</td>
+                                    <td>@user.Email</td>
+                                    <td>
+                                        <span class="badge bg-secondary">@user.Role</span>
+                                    </td>
+                                    <td>
+                                        @if (user.BlockedUntil.HasValue)
+                                        {
+                                            <span class="badge bg-danger">
+                                                @user.BlockedUntil.Value.ToString("MMM dd, yyyy hh:mm tt")
+                                                @if (user.BlockedUntil.Value < DateTime.Now)
+                                                {
+                                                    <span class="ms-1">(Expired)</span>
+                                                }
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#roleModal-@user.Id">
+                                                <i class="bi bi-person-plus"></i> Change Role
+                                            </button>
+                                            
+                                            <form asp-action="BlockUser" asp-route-id="@user.Id" asp-route-returnView="BlockedUsers" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-success" 
+                                                        onclick="return confirm('Are you sure you want to unblock @user.Name?')">
+                                                    <i class="bi bi-unlock"></i> Unblock
+                                                </button>
+                                            </form>
+                                            
+                                            <form asp-action="DeleteUser" asp-route-id="@user.Id" asp-route-returnView="BlockedUsers" method="post" class="d-inline">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" 
+                                                        onclick="return confirm('Are you sure you want to delete this user?')">
+                                                    <i class="bi bi-trash"></i> Delete
+                                                </button>
+                                            </form>
+                                        </div>
+                                        
+                                        <!-- Role Assignment Modal -->
+                                        <div class="modal fade" id="roleModal-@user.Id" tabindex="-1" aria-labelledby="roleModalLabel-@user.Id" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="roleModalLabel-@user.Id">Assign Role to @user.Name</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form asp-action="AssignRoleFromBlocked" asp-controller="Admin" method="post">
+                                                        <div class="modal-body">
+                                                            <input type="hidden" name="userId" value="@user.Id" />
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Select Role</label>
+                                                                <select name="roleName" class="form-select">
+                                                                    <option value="@user.Role">Select Role</option>
+                                                                    @if (Model.Roles != null)
+                                                                    {
+                                                                        @foreach(string rolename in Model.Roles)
+                                                                        {
+                                                                            <option value="@rolename">@rolename</option>
+                                                                        }
+                                                                    }
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+    <style>
+        .badge {
+            font-size: 0.9em;
+            padding: 5px 10px;
+        }
+        .table th {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .btn-group .btn {
+            margin-right: 5px;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+    </style>

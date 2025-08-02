@@ -1,0 +1,141 @@
+@model ToDoApp.ViewModel.AdminDashboardVM
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid">
+    <h2 class="mb-4">Admin Dashboard</h2>
+    
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary">
+                <div class="card-body">
+                    <h5 class="card-title">Total Users</h5>
+                    <h2 class="card-text">@Model.UserCount</h2>
+                    <a asp-action="Users" class="text-white">View All</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-success">
+                <div class="card-body">
+                    <h5 class="card-title">Total Roles</h5>
+                    <h2 class="card-text">@Model?.Roles?.Count</h2>
+                    <a asp-action="Roles" class="text-white">Manage Roles</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-warning">
+                <div class="card-body">
+                    <h5 class="card-title">Blocked Users</h5>
+                    <h2 class="card-text">@Model.BlockedUserCount</h2>
+                    <a asp-action="BlockedUsers" class="text-white">View Blocked</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-3">
+            <div class="card text-white bg-info">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Actions</h5>
+                    <div class="d-flex flex-column">
+                        <a asp-action="AddRole" class="text-white mb-2">Add New Role</a>
+                        <a asp-action="CreateUser" class="text-white">Add New User</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Users Without Actions -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Recent Users</h5>
+        </div>
+        <div class="card-body">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model.RecentUsers)
+                    {
+                        <tr>
+                            <td>@user.Name</td>
+                            <td>@user.Email</td>
+                            <td>
+                                @if (user.IsBlocked)
+                                {
+                                    <span class="badge bg-danger">Blocked</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">Active</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="mt-3">
+                <a asp-action="Users" class="btn btn-primary">
+                    <i class="bi bi-people"></i> Manage All Users
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Roles Summary Without Actions -->
+    <div class="card">
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0">Current Roles</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @foreach (var role in Model.Roles)
+                {
+                    <div class="col-md-3 mb-3">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">@role.Name</h5>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="mt-3">
+                <a asp-action="Roles" class="btn btn-success">
+                    <i class="bi bi-shield-lock"></i> Manage All Roles
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <style>
+        .card {
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(33, 40, 50, 0.15);
+            transition: transform 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        .badge {
+            font-size: 0.9em;
+            padding: 5px 10px;
+        }
+    </style>
+}

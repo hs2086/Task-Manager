@@ -1,0 +1,207 @@
+@model ToDoApp.ViewModel.ProfileVM
+
+<div class="profile-container">
+    <div class="profile-header">
+        <h2>User Profile</h2>
+    </div>
+
+    <div class="profile-details">
+        <div class="profile-section">
+            <h4>Personal Information</h4>
+            <div class="detail-row">
+                <span class="detail-label">Name:</span>
+                <span class="detail-value">@Model.Name</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Email:</span>
+                <span class="detail-value">@Model.Email</span>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h4>Task Statistics</h4>
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-value">@Model.NumberOfTasks</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-value">@Model.NumberOfTasksCompleted</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-value">@Model.NumberOfTasksPending</div>
+                    <div class="stat-label">Pending</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-value">@Model.NumberOfTasksMissed</div>
+                    <div class="stat-label">Missed</div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar Showing Completion Status -->
+            <div class="progress-container">
+                <div class="progress mt-3">
+                    <div class="progress-bar bg-success" 
+                         style="width: @Model.CompletionPercentage%">
+                        @Math.Round(Model.CompletionPercentage)% Complete
+                    </div>
+                    <div class="progress-bar bg-warning" 
+                         style="width: @Model.PendingPercentage%">
+                        @Math.Round(Model.PendingPercentage)% Pending
+                    </div>
+                    <div class="progress-bar bg-danger" 
+                         style="width: @Model.MissedPercentage%">
+                        @Math.Round(Model.MissedPercentage)% Missed
+                    </div>
+                </div>
+            </div>
+            <div class="profile-actions mt-4">
+                <a href="/Account/ChangePassword" class="btn btn-primary btn-change-password">
+                    <i class="fas fa-key me-2"></i>Change Password
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 2rem;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .profile-section {
+        margin-bottom: 2rem;
+    }
+
+    .profile-section h4 {
+        color: #2c3e50;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 1rem;
+    }
+
+    .detail-label {
+        font-weight: 600;
+        width: 120px;
+        color: #495057;
+    }
+
+    .detail-value {
+        color: #6c757d;
+    }
+
+    .stats-container {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .stat-card {
+        flex: 1;
+        min-width: 120px;
+        padding: 1.5rem;
+        text-align: center;
+        border-radius: 8px;
+        background: #f8f9fa;
+    }
+
+    .stat-card.success {
+        background: #e6f7ee;
+        color: #28a745;
+    }
+
+    .stat-card.danger {
+        background: #fce8e8;
+        color: #dc3545;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.8;
+    }
+
+    .stat-card.warning {
+        background: #fff3cd;
+        color: #ffc107;
+    }
+    
+    .progress-container {
+        margin-top: 2rem;
+    }
+    
+    .progress {
+        height: 30px;
+        border-radius: 5px;
+    }
+    
+    .progress-bar {
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-change-password {
+        padding: 0.5rem 1.5rem;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .btn-change-password:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    
+    .profile-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #eee;
+    }
+    
+    @@media (max-width: 768px) {
+        .profile-actions {
+            justify-content: center;
+        }
+        
+        .btn-change-password {
+            width: 100%;
+            padding: 0.75rem;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .stats-container {
+            flex-direction: column;
+        }
+        
+        .stat-card {
+            min-width: 100%;
+        }
+    }
+</style>

@@ -1,0 +1,182 @@
+@using ToDoApp.ViewModel
+@model ForgotVM
+
+<div class="split-container">
+    <div class="image-section">
+        <img src="~/Images/back.jpeg" alt="Background Image" class="main-image" />
+    </div>
+    <div class="form-section">
+        <div class="form-container">
+            <h1>@(Model.Step == 1 ? "Forgot Password" : "Verify Code")</h1>
+            <form class="forgot-form" asp-action="Forgot" asp-controller="Account" method="post">
+                <input type="hidden" asp-for="Step" value="@Model.Step" />
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+                
+                <div class="form-content">
+                    @if (Model.Step == 1)
+                    {
+                        <div class="form-group">
+                            <label asp-for="Email" class="form-label">Email Address</label>
+                            <input asp-for="Email" class="form-control" placeholder="Enter your email">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    }
+                    else if (Model.Step == 2)
+                    {
+                        <div class="form-group text-center">
+                            <p class="small-text">Verification code sent to <strong>@Model.Email</strong></p>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="VerificationCode" class="form-label">Verification Code</label>
+                            <input asp-for="VerificationCode" class="form-control" placeholder="Enter 6-digit code">
+                            <span asp-validation-for="VerificationCode" class="text-danger"></span>
+                        </div>
+                    }
+                </div>
+
+                <div class="button-group">
+                    @if (Model.Step == 1)
+                    {
+                        <button type="submit" class="btn btn-primary">Send Code</button>
+                        <a asp-action="Login" asp-controller="Account" class="btn btn-outline">Back to Login</a>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary">Verify</button>
+                        <a asp-action="Forgot" asp-controller="Account" class="btn btn-outline">Resend Code</a>
+                    }
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* All your existing styles remain exactly the same */
+    html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .split-container {
+        display: flex;
+        height: 100vh;
+    }
+
+    .image-section {
+        flex: 1;
+        overflow: hidden;
+    }
+
+    .main-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .form-section {
+        flex: 1;
+        display: flex;
+        background-color: #fff;
+        padding: 2vh 0;
+        overflow-y: auto;
+    }
+
+    .form-container {
+        width: 90%;
+        max-width: 350px;
+        padding: 15px;
+        margin: auto;
+    }
+
+    h1 {
+        text-align: center;
+        margin: 0 0 20px 0;
+        font-size: 1.5rem;
+    }
+
+    .form-label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        color: #555;
+        font-weight: 500;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 8px 0;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+    }
+
+    .text-danger {
+        color: #dc3545;
+        font-size: 12px;
+        margin-top: 3px;
+        display: block;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-primary {
+        flex: 1;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .btn-outline {
+        flex: 1;
+        padding: 10px;
+        background: none;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-align: center;
+        text-decoration: none;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .small-text {
+        font-size: 13px;
+        margin-bottom: 15px;
+        color: #666;
+    }
+
+    @@media (max-width: 768px) {
+        .split-container {
+            flex-direction: column;
+        }
+        
+        .image-section {
+            height: 30vh;
+        }
+        
+        .form-section {
+            padding: 15px 0;
+        }
+        
+        .form-container {
+            width: 85%;
+        }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
